@@ -147,7 +147,7 @@ document.getElementById('uscFile').addEventListener('change', function (event) {
         return;
     }
 
-    if (file.name.endsWith('.usc')) {
+    if (file.name.endsWith('.usc','.json')) {
         // USCファイルが選択された場合、ファイルを読み込み解析する
         const reader = new FileReader();
         reader.onload = function (e) {
