@@ -94,7 +94,7 @@ function analyzeUSC(content) {
             flags.laneViolation = true;
         }
     
-        // レーン外判定（レーン範囲外に飛び出している場合）
+        // レーン外判定
         const leftEdge = laneValue - sizeValue;
         const rightEdge = laneValue + sizeValue;
     
@@ -116,13 +116,13 @@ function analyzeUSC(content) {
                 flags.sizeViolation2 = true;
             }
     
-            // サイズの検証：laneがx.0のとき、sizeの2倍が偶数でなければなりません
+            // laneがx.0のとき、sizeの2倍が偶数でなければならない
             if (laneValue % 1 === 0 && sizeValue !== null && sizeValue * 2 % 2 !== 0 && !flags.sizeLaneMismatch) {
                 redMessages.push(`❌ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
                 flags.sizeLaneMismatch = true;
             }
     
-            // サイズの検証：laneがx.5のとき、sizeの2倍が奇数でなければなりません
+            // laneがx.5のとき、sizeの2倍が奇数でなければならない
             if (laneValue % 1 === 0.5 && sizeValue !== null && sizeValue * 2 % 2 !== 1 && !flags.sizeLaneMismatch2) {
                 redMessages.push(`❌ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
                 flags.sizeLaneMismatch = true;
