@@ -39,6 +39,8 @@ function analyzeUSC(content) {
     const flags = {
         laneViolation: false,
         sizeViolation: false,
+        laneViolation2: false,
+        sizeViolation2: false,
         typeViolation: false,
         directionViolation: false,
         fadeViolation: false,
@@ -65,7 +67,7 @@ function analyzeUSC(content) {
     colors.forEach((color, index) => {
         const colorValue = color.split('"')[3];
         if (!['green', 'yellow'].includes(colorValue) && !flags.colorViolation) {
-            greenMessages.push(`⭕️ 緑、黄以外の色ガイドが使われています [${colorLines[index]}]`);
+            greenMessages.push(`⭕ 緑、黄以外の色ガイドが使われています [${colorLines[index]}]`);
             flags.colorViolation = true;
         }
     });
@@ -85,14 +87,24 @@ function analyzeUSC(content) {
         const laneValue = parseFloat(lanes[i].match(/([-+]?[0-9]*\.?[0-9]+)/)[0]);
         const sizeValue = i < sizes.length ? parseFloat(sizes[i].match(/([-+]?[0-9]*\.?[0-9]+)/)[0]) : null;
 
-        if (!allowedLanes.has(laneValue) && !flags.laneViolation) {
-            redMessages.push(`❌ レーン外、または小数レーンにノーツが使われています [${laneLines[i]}]`);
-            flags.laneViolation = true;
+        if (!allowedLanes.has(laneValue)) {
+            if (!Number.isInteger(laneValue * 2) && !flags.laneViolation2) {
+                redMessages.push(`❌ 小数レーンにノーツが配置されています [${laneLines[i]}]`);
+                flags.laneViolation2 = true;
+            } else if (!flags.laneViolation) {
+                redMessages.push(`❌ レーン範囲外にノーツが配置されています [${laneLines[i]}]`);
+                flags.laneViolation = true;
+            }
         }
-
-        if (sizeValue !== null && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
-            redMessages.push(`❌ 1~12の整数幅ではないノーツが使われています [${sizeLines[i]}]`);
-            flags.sizeViolation = true;
+        
+        if (sizeValue !== null && !allowedSizes.has(sizeValue)) {
+            if (sizeValue % 1 !== 0 && !flags.sizeViolation2) {
+                redMessages.push(`❌ 小数幅ノーツが配置されています [${sizeLines[i]}]`);
+                flags.sizeViolation2 = true;
+            } else if (sizeValue > 12 && !flags.sizeViolation) {
+                redMessages.push(`❌ 幅が13以上のノーツが配置されています [${sizeLines[i]}]`);
+                flags.sizeViolation = true;
+            }
         }
     }
 
