@@ -158,8 +158,12 @@ document.getElementById('uscFile').addEventListener('change', function (event) {
     } else if (file.name.endsWith('.sus')) {
         // SUSファイルが選択された場合、別のメッセージを表示
         resultsDiv.innerHTML = "現在susには対応していません。";
+        resultsDiv.style.display = "block";
+        resultsDiv2.style.display = "none";
     } else {
         // その他のファイル形式の場合、無効なファイル形式のメッセージを表示
         resultsDiv.innerHTML = "譜面ファイルを選択してください。";
+        resultsDiv.style.display = "block";
+        resultsDiv2.style.display = "none";
     }
 });
