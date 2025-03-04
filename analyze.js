@@ -98,7 +98,7 @@ function analyzeUSC(content) {
         const leftEdge = laneValue - sizeValue;
         const rightEdge = laneValue + sizeValue;
     
-        if ((leftEdge < -6.0 || rightEdge > 6.0) && !flags.laneViolation) {
+        if ((leftEdge < -6.0 || rightEdge > 6.0) && !flags.laneViolation2) {
             redMessages.push(`❌ ノーツがレーン外に飛び出しています [${laneLines[i]}]`);
             flags.laneViolation2 = true;
         }
