@@ -47,6 +47,7 @@ function analyzeUSC(content) {
         easeViolation: false,
         colorViolation: false,
         timescaleViolation: false,
+        sizeLaneMismatch: true,
     };
 
     const redMessages = [];   // ❌ メッセージ
@@ -82,28 +83,49 @@ function analyzeUSC(content) {
 
     const allowedLanes = new Set([-5.5, -5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5]);
     const allowedSizes = new Set([0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0]);
-
+    
     for (let i = 0; i < lanes.length; i++) {
         const laneValue = parseFloat(lanes[i].match(/([-+]?[0-9]*\.?[0-9]+)/)[0]);
         const sizeValue = i < sizes.length ? parseFloat(sizes[i].match(/([-+]?[0-9]*\.?[0-9]+)/)[0]) : null;
-
-        if (!allowedLanes.has(laneValue)) {
-            if (!Number.isInteger(laneValue * 2) && !flags.laneViolation2) {
-                redMessages.push(`❌ 小数レーンにノーツが配置されています [${laneLines[i]}]`);
-                flags.laneViolation2 = true;
-            } else if (!flags.laneViolation) {
-                redMessages.push(`❌ レーン範囲外にノーツが配置されています [${laneLines[i]}]`);
-                flags.laneViolation = true;
-            }
+    
+        // 小数レーンの処理
+        if (laneValue % 1 !== 0 && !allowedLanes.has(laneValue) && !flags.laneViolation) {
+            redMessages.push(`❌ 小数レーンにノーツが置かれています [${laneLines[i]}]`);
+            flags.laneViolation = true;
         }
-        
-        if (sizeValue !== null && !allowedSizes.has(sizeValue)) {
-            if (sizeValue % 1 !== 0 && !flags.sizeViolation2) {
-                redMessages.push(`❌ 小数幅ノーツが配置されています [${sizeLines[i]}]`);
-                flags.sizeViolation2 = true;
-            } else if (sizeValue > 12 && !flags.sizeViolation) {
-                redMessages.push(`❌ 幅が13以上のノーツが配置されています [${sizeLines[i]}]`);
+    
+        // レーン外判定（レーン範囲外に飛び出している場合）
+        const leftEdge = laneValue - sizeValue;
+        const rightEdge = laneValue + sizeValue;
+    
+        if ((leftEdge < -6.0 || rightEdge > 6.0) && !flags.laneViolation) {
+            redMessages.push(`❌ ノーツがレーン外に飛び出しています [${laneLines[i]}]`);
+            flags.laneViolation2 = true;
+        }
+    
+        // 小数幅と13以上の幅の処理分岐
+        if (sizeValue !== null) {
+            if (sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
+                redMessages.push(`❌ 小数幅のノーツが使われています [${sizeLines[i]}]`);
                 flags.sizeViolation = true;
+            }
+    
+            // 幅が13以上の場合
+            if (sizeValue * 2 >= 13 && !flags.sizeViolation2) {
+                redMessages.push(`❌ ノーツの幅が13以上になっています [${sizeLines[i]}]`);
+                flags.sizeViolation2 = true;
+            }
+    
+            // サイズの検証：laneがx.0のとき、sizeの2倍が偶数でなければなりません
+            if (laneValue % 1 === 0 && sizeValue !== null && sizeValue * 2 % 2 !== 0 && !flags.sizeLaneMismatch) {
+                redMessages.push(`❌ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
+                flags.sizeLaneMismatch = true;
+            }
+    
+            // サイズの検証：laneがx.5のとき、sizeの2倍が奇数でなければなりません
+            if (laneValue % 1 === 0.5 && sizeValue !== null && sizeValue * 2 % 2 !== 1 && !flags.sizeLaneMismatch2) {
+                redMessages.push(`❌ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
+                flags.sizeLaneMismatch = true;
             }
         }
     }
