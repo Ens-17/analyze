@@ -48,6 +48,7 @@ function analyzeUSC(content) {
         colorViolation: false,
         timescaleViolation: false,
         sizeLaneMismatch: true,
+        sizeLaneMismatch2: true,
     };
 
     const redMessages = [];   // ❌ メッセージ
@@ -125,7 +126,7 @@ function analyzeUSC(content) {
             // laneがx.5のとき、sizeの2倍が奇数でなければならない
             if (laneValue % 1 === 0.5 && sizeValue !== null && sizeValue * 2 % 2 !== 1 && !flags.sizeLaneMismatch2) {
                 redMessages.push(`❌ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
-                flags.sizeLaneMismatch = true;
+                flags.sizeLaneMismatch2 = true;
             }
         }
     }
