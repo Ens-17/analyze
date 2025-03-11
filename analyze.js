@@ -107,13 +107,13 @@ function analyzeUSC(content) {
         // 小数幅と13以上の幅の処理分岐
         if (sizeValue !== null) {
             if (sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
-                redMessages.push(`❌ 小数幅のノーツが使われています [${sizeLines[i]}]`);
+                redMessages.push(`❌ 0幅、または小数幅のノーツが使われています [${sizeLines[i]}]`);
                 flags.sizeViolation = true;
             }
     
             // 幅が13以上の場合
             if (sizeValue * 2 >= 13 && !flags.sizeViolation2) {
-                redMessages.push(`❌ ノーツの幅が13以上になっています [${sizeLines[i]}]`);
+                redMessages.push(`❌ 13幅以上のノーツが置かれています [${sizeLines[i]}]`);
                 flags.sizeViolation2 = true;
             }
     
