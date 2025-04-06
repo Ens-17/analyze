@@ -120,7 +120,7 @@ function analyzeUSC(content) {
 
             // 幅が0の場合
             if (sizeValue * 2 = 0 && !flags.sizeViolation3) {
-                redMessages.push(`❌ 0幅のノーツが置かれています [${sizeLines[i]}]`);
+                greenMessages.push(`️⭕️ 0幅のノーツが置かれています [${sizeLines[i]}]`);
                 flags.sizeViolation3 = true;
             }
     
