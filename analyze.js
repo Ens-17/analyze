@@ -90,13 +90,11 @@ function analyzeUSC(content) {
         const laneValue = parseFloat(lanes[i].match(/([-+]?[0-9]*\.?[0-9]+)/)[0]);
         const sizeValue = i < sizes.length ? parseFloat(sizes[i].match(/([-+]?[0-9]*\.?[0-9]+)/)[0]) : null;
     
-        // 小数レーンの処理
         if (laneValue % 1 !== 0 && !allowedLanes.has(laneValue) && !flags.laneViolation) {
             greenMessages.push(`️⭕️ 小数レーンにノーツが置かれています [${laneLines[i]}]`);
             flags.laneViolation = true;
         }
     
-        // レーン外判定
         const leftEdge = laneValue - sizeValue;
         const rightEdge = laneValue + sizeValue;
     
@@ -105,32 +103,27 @@ function analyzeUSC(content) {
             flags.laneViolation2 = true;
         }
     
-        // 小数幅と13以上の幅の処理分岐
         if (sizeValue !== null) {
-            if (0 < sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
-                greenMessages.push(`️⭕️ 小数幅のノーツが使われています [${sizeLines[i]}]`);
+            if (sizeValue * 2 > 0 && sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
+                greenMessages.push(`⭕️ 小数幅のノーツが使われています [${sizeLines[i]}]`);
                 flags.sizeViolation = true;
             }
     
-            // 幅が13以上の場合
             if (sizeValue * 2 >= 13 && !flags.sizeViolation2) {
                 redMessages.push(`❌ 13幅以上のノーツが置かれています [${sizeLines[i]}]`);
                 flags.sizeViolation2 = true;
             }
 
-            // 幅が0の場合
             if (sizeValue * 2 == 0 && !flags.sizeViolation3) {
                 greenMessages.push(`️⭕️ 0幅のノーツが置かれています [${sizeLines[i]}]`);
                 flags.sizeViolation3 = true;
             }
     
-            // laneがx.0のとき、sizeの2倍が偶数でなければならない
             if (laneValue % 1 === 0 && sizeValue !== null && sizeValue * 2 % 2 !== 0 && !flags.sizeLaneMismatch) {
                 redMessages.push(`❌ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
                 flags.sizeLaneMismatch = true;
             }
     
-            // laneがx.5のとき、sizeの2倍が奇数でなければならない
             if (laneValue % 1 === 0.5 && sizeValue !== null && sizeValue * 2 % 2 !== 1 && !flags.sizeLaneMismatch) {
                 redMessages.push(`❌ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
                 flags.sizeLaneMismatch = true;
