@@ -41,6 +41,7 @@ function analyzeUSC(content) {
         sizeViolation: false,
         laneViolation2: false,
         sizeViolation2: false,
+        sizeViolation3: false,
         typeViolation: false,
         directionViolation: false,
         fadeViolation: false,
@@ -91,7 +92,7 @@ function analyzeUSC(content) {
     
         // 小数レーンの処理
         if (laneValue % 1 !== 0 && !allowedLanes.has(laneValue) && !flags.laneViolation) {
-            redMessages.push(`❌ 小数レーンにノーツが置かれています [${laneLines[i]}]`);
+            greenMessages.push(`️⭕️ 小数レーンにノーツが置かれています [${laneLines[i]}]`);
             flags.laneViolation = true;
         }
     
@@ -106,8 +107,8 @@ function analyzeUSC(content) {
     
         // 小数幅と13以上の幅の処理分岐
         if (sizeValue !== null) {
-            if (sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
-                redMessages.push(`❌ 0幅、または小数幅のノーツが使われています [${sizeLines[i]}]`);
+            if (0 < sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
+                greenMessages.push(`️⭕️ 小数幅のノーツが使われています [${sizeLines[i]}]`);
                 flags.sizeViolation = true;
             }
     
@@ -115,6 +116,12 @@ function analyzeUSC(content) {
             if (sizeValue * 2 >= 13 && !flags.sizeViolation2) {
                 redMessages.push(`❌ 13幅以上のノーツが置かれています [${sizeLines[i]}]`);
                 flags.sizeViolation2 = true;
+            }
+
+            // 幅が0の場合
+            if (sizeValue * 2 = 0 && !flags.sizeViolation3) {
+                redMessages.push(`❌ 0幅のノーツが置かれています [${sizeLines[i]}]`);
+                flags.sizeViolation3 = true;
             }
     
             // laneがx.0のとき、sizeの2倍が偶数でなければならない
