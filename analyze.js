@@ -107,7 +107,7 @@ function analyzeUSC(content) {
     
         // 小数幅と13以上の幅の処理分岐
         if (sizeValue !== null) {
-            if (sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
+            if (0 < sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
                 greenMessages.push(`️⭕️ 小数幅のノーツが使われています [${sizeLines[i]}]`);
                 flags.sizeViolation = true;
             }
@@ -119,7 +119,7 @@ function analyzeUSC(content) {
             }
 
             // 幅が0の場合
-            if (sizeValue * 2 = 0 && !flags.sizeViolation3) {
+            if (sizeValue * 2 == 0 && !flags.sizeViolation3) {
                 greenMessages.push(`️⭕️ 0幅のノーツが置かれています [${sizeLines[i]}]`);
                 flags.sizeViolation3 = true;
             }
