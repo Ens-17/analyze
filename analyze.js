@@ -107,7 +107,7 @@ function analyzeUSC(content) {
     
         // 小数幅と13以上の幅の処理分岐
         if (sizeValue !== null) {
-            if (0 < sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
+            if (sizeValue * 2 < 13 && !allowedSizes.has(sizeValue) && !flags.sizeViolation) {
                 greenMessages.push(`️⭕️ 小数幅のノーツが使われています [${sizeLines[i]}]`);
                 flags.sizeViolation = true;
             }
