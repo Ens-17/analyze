@@ -57,7 +57,7 @@ function analyzeUSC(content) {
 
     eases.forEach((ease, index) => {
         if ((ease.includes('inout') || ease.includes('outin')) && !flags.easeViolation) {
-            redMessages.push(`❌ 直線、加速、減速以外の曲線が使われています [${easeLines[index]}]`);
+            greenMessages.push(`️⭕️ 直線、加速、減速以外の曲線が使われています [${easeLines[index]}]`);
             flags.easeViolation = true;
         }
     });
