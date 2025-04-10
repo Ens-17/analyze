@@ -125,7 +125,7 @@ function analyzeUSC(content) {
             }
     
             if (laneValue % 1 === 0.5 && sizeValue !== null && sizeValue * 2 % 2 !== 1 && !flags.sizeLaneMismatch) {
-                redMessages.push(`❌ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
+                greenMessages.push(`️⭕️ ノーツが公式ではありえないレーンに置かれています [${laneLines[i]}]`);
                 flags.sizeLaneMismatch = true;
             }
         }
