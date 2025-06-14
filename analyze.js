@@ -109,8 +109,8 @@ function analyzeUSC(content) {
                 flags.sizeViolation = true;
             }
     
-            if (sizeValue * 2 >= 13 && !flags.sizeViolation2) {
-                redMessages.push(`❌ 13幅以上のノーツが置かれています [${sizeLines[i]}]`);
+            if (sizeValue * 2 >= 17 && !flags.sizeViolation2) {
+                redMessages.push(`❌ 17幅以上のノーツが置かれています [${sizeLines[i]}]`);
                 flags.sizeViolation2 = true;
             }
 
