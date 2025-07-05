@@ -64,7 +64,7 @@ function analyzeUSC(content) {
 
     // 複数レイヤーチェック
     if (types.filter(type => type.includes('timeScaleGroup')).length >= 2) {
-        redMessages.push("❌ レイヤーが複数あります");
+        greenMessages.push("️⭕️ レイヤーが複数あります");
     }
 
     colors.forEach((color, index) => {
